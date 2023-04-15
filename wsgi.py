@@ -28,11 +28,8 @@ def default_status():
         # The contents of messages array can be accessed using an http GET
         data.append(msg.value().decode('utf-8'))
         return jsonify(data)
-    if msg.error():
-        if msg.error().code() == KafkaError._PARTITION_EOF:
-            print('End of partition reached')
-        else:
-            print('Error while consuming message: {}'.format(msg.error()))
+    else:
+        return jsonify({'status': 'no kafka messages'})
 
 @application.route('/status')
 def status():
