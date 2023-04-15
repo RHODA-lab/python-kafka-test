@@ -1,10 +1,5 @@
 Flask
 gunicorn
 ## Other Libraries
-pyservicebinding
-psycopg2
 requests
-pandas
-mysql-connector-python
-oracledb
-pymssql
+confluent_kafka

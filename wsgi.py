@@ -1,6 +1,7 @@
 import os
 import json
 from flask import Flask, jsonify, request
+from confluent_kafka import Consumer, KafkaError
 
 application = Flask(__name__)
 
