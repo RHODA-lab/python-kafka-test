@@ -9,9 +9,9 @@ application = Flask(__name__)
 @application.route('/')
 def default_status():
     if 'SERVICE_BINDING_ROOT' in os.environ:
-    	return jsonify({'def status': 'DB binding ok'})
+    	return jsonify({'def status1': 'DB binding ok'})
     else:
-    	return jsonify({'def status': 'DB binding missing'})
+    	return jsonify({'def status1': 'DB binding missing'})
 
 @application.route('/status')
 def status():
