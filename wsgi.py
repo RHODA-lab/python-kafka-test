@@ -15,7 +15,7 @@ def status():
     	return jsonify({'status': 'DB binding missing'})
 
 
-@application.route('/dbbind', methods=['POST'])
+@application.route('/dbbind', methods=['GET'])
 def create_db_bind():
     data = request.data or '{}'
     body = json.loads(data)
