@@ -18,9 +18,17 @@ conf = {
 # Initialize Consumer and subscribe to kafka topic
 consumer = Consumer(conf)
 consumer.subscribe(['user7-table-changes'])
+producer = Producer(conf)
+
+# Define the callback function to handle delivery reports
+def delivery_report(err, msg):
+    if err is not None:
+        print(f"Delivery failed: {err}")
+    else:
+        print(f"Message delivered to {msg.topic()} [{msg.partition()}]")
 
 @application.route('/')
-def default_status():
+def consumer():
     msg = consumer.poll(1.0)
     if msg is not None:
         print('Received message: {}'.format(msg.value().decode('utf-8')))
@@ -30,6 +38,17 @@ def default_status():
         return jsonify(data)
     else:
         return jsonify({'status': 'no kafka messages'})
+
+@application.route('/producer')
+def producer():
+    # Construct the message to be produced
+    message = f"Kafka Test Message {100}".encode("utf-8")
+    # Use the producer instance to produce the message to the topic
+    producer.produce(topic, key=str(100), value=message, callback=delivery_report)
+    # Wait for any outstanding messages to be delivered and delivery reports to be received
+    producer.flush()
+    return jsonify({'producer': 'posted kafka messages'})
+
 
 @application.route('/status')
 def status():
