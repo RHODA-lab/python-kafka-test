@@ -1,0 +1,10 @@
+Flask
+gunicorn
+## Other Libraries
+pyservicebinding
+psycopg2
+requests
+pandas
+mysql-connector-python
+oracledb
+pymssql
