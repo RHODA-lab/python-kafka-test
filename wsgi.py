@@ -1,7 +1,7 @@
 import os
 import json
 from flask import Flask, jsonify, request
-from confluent_kafka import Consumer, Producer, KafkaError
+from confluent_kafka import Consumer, KafkaError
 
 application = Flask(__name__)
 
@@ -28,7 +28,7 @@ def delivery_report(err, msg):
         print(f"Message delivered to {msg.topic()} [{msg.partition()}]")
 
 @application.route('/')
-def consumer():
+def kafka_consume():
     msg = consumer.poll(1.0)
     if msg is not None:
         print('Received message: {}'.format(msg.value().decode('utf-8')))
@@ -37,17 +37,17 @@ def consumer():
         data.append(msg.value().decode('utf-8'))
         return jsonify(data)
     else:
-        return jsonify({'status': 'no kafka messages'})
+        return jsonify({'kafka_consume': 'no kafka messages'})
 
-@application.route('/producer')
-def producer():
+@application.route('/produce')
+def kafka_produce():
     # Construct the message to be produced
     message = f"Kafka Test Message {100}".encode("utf-8")
     # Use the producer instance to produce the message to the topic
     producer.produce(topic, key=str(100), value=message, callback=delivery_report)
     # Wait for any outstanding messages to be delivered and delivery reports to be received
     producer.flush()
-    return jsonify({'producer': 'posted kafka messages'})
+    return jsonify({'kafka_produce': 'posted kafka messages'})
 
 
 @application.route('/status')
