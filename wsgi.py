@@ -1,7 +1,6 @@
 import os
 import json
 from flask import Flask, jsonify, request
-from db_binding import db_bind
 
 application = Flask(__name__)
 
