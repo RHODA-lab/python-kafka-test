@@ -19,6 +19,7 @@ conf = {
 consumer = Consumer(conf)
 consumer.subscribe(['user7-table-changes'])
 producer = Producer(conf)
+topic = "user7-table-changes"
 
 # Define the callback function to handle delivery reports
 def delivery_report(err, msg):
