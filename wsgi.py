@@ -30,24 +30,31 @@ def delivery_report(err, msg):
 
 @application.route('/')
 def kafka_consume():
-    msg = consumer.poll(1.0)
-    if msg is not None:
-        print('Received message: {}'.format(msg.value().decode('utf-8')))
-        # The kafka messages you receive on the topic are appended to the messages array
-        # The contents of messages array can be accessed using an http GET
-        data.append(msg.value().decode('utf-8'))
+    flag = False
+    for j in range(20):
+        msg = consumer.poll(1.0)
+        if msg is None:
+            continue
+        else:
+            print('Received message: {}'.format(msg.value().decode('utf-8')))
+            # The kafka messages you receive on the topic are appended to the messages array
+            # The contents of messages array can be accessed using an http GET
+            data.append(msg.value().decode('utf-8'))
+            flag = True
+    if flag:
         return jsonify(data)
     else:
         return jsonify({'kafka_consume': 'no kafka messages'})
 
 @application.route('/produce')
 def kafka_produce():
-    # Construct the message to be produced
-    message = f"Kafka Test Message {100}".encode("utf-8")
-    # Use the producer instance to produce the message to the topic
-    producer.produce(topic, key=str(100), value=message, callback=delivery_report)
-    # Wait for any outstanding messages to be delivered and delivery reports to be received
-    producer.flush()
+    for i in range(20):
+        # Construct the message to be produced
+        message = f"Kafka Test Message {i}".encode("utf-8")
+        # Use the producer instance to produce the message to the topic
+        producer.produce(topic, key=str(i), value=message, callback=delivery_report)
+        # Wait for any outstanding messages to be delivered and delivery reports to be received
+        producer.flush()
     return jsonify({'kafka_produce': 'posted kafka messages'})
 
 
